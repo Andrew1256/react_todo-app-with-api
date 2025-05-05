@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 export const UserWarning: React.FC = () => {
-  const [userId, setUserId] = useState('');
+  const [userId, setUserId] = useState('2780');
 
   const handleSave = () => {
     const id = Number(userId);
@@ -24,7 +24,6 @@ export const UserWarning: React.FC = () => {
         </a>{' '}
         and save it in the app{' '}
         <pre>
-          const USER_ID ={' '}
           <input
             type="number"
             value={userId}
@@ -32,7 +31,11 @@ export const UserWarning: React.FC = () => {
             className="input mb-2"
             placeholder="Ваш userId"
           />
-          <button onClick={handleSave}>Зберегти userId</button>
+          <p>
+            <button className="button" onClick={handleSave}>
+              Зберегти userId
+            </button>
+          </p>
         </pre>
         All requests to the API must be sent with this
         <b> userId.</b>

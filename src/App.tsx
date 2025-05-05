@@ -149,6 +149,7 @@ export const App: React.FC = () => {
 
     if (!trimmed) {
       handleDelete(id);
+
       return;
     }
 
@@ -156,15 +157,14 @@ export const App: React.FC = () => {
       // Якщо не змінили текст — просто вийти з режиму редагування
       setUpdatingId(null);
       setUpdatingText('');
+
       return;
     }
 
     try {
       const updatedTodo = await patchTodos(id, { title: trimmed });
 
-      setAllTodos(current =>
-        current.map(t => (t.id === id ? updatedTodo : t)),
-      );
+      setAllTodos(current => current.map(t => (t.id === id ? updatedTodo : t)));
 
       // Успішне оновлення — закриваємо
       setUpdatingId(null);
@@ -174,7 +174,6 @@ export const App: React.FC = () => {
       setErrors('Unable to update a todo');
     }
   };
-
 
   const toggleCompleted = async (id: number, currentStatus: boolean) => {
     setTogglingCompleted(id);
