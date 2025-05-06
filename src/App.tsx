@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
-import { UserWarning } from './UserWarning';
 import {
   deleteTodos,
   getTodos,
@@ -13,6 +12,10 @@ import { Footer } from './components/Footer';
 import { Selected } from './types/Selected';
 import { Header } from './components/Header';
 import { TodoList } from './components/TodoList';
+
+type AllowedEvent =
+  | React.FormEvent<HTMLFormElement | HTMLInputElement>
+  | React.KeyboardEvent<HTMLInputElement>;
 
 export const App: React.FC = () => {
   const [allTodos, setAllTodos] = useState<Todo[]>([]);
@@ -28,6 +31,7 @@ export const App: React.FC = () => {
   const [togglingCompleted, setTogglingCompleted] = useState<number | null>(
     null,
   );
+
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
@@ -62,9 +66,17 @@ export const App: React.FC = () => {
     return () => clearTimeout(timeout);
   }, [errors]);
 
-  if (!USER_ID) {
-    return <UserWarning />;
-  }
+  const onKeyDown = (id: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Escape') {
+      setUpdatingId(null);
+      setUpdatingText('');
+    }
+
+    if (e.key === 'Enter') {
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      handleSave(id, e);
+    }
+  };
 
   const filteredTodos = allTodos.filter(todo => {
     if (selected === Selected.Active) {
@@ -138,10 +150,7 @@ export const App: React.FC = () => {
     }
   };
 
-  const handleSave = async (
-    id: number,
-    e: React.FormEvent<HTMLFormElement | HTMLInputElement>,
-  ) => {
+  const handleSave = async (id: number, e: AllowedEvent) => {
     e.preventDefault();
 
     const trimmed = updatingText.trim();
@@ -154,7 +163,6 @@ export const App: React.FC = () => {
     }
 
     if (currentTodo?.title === trimmed) {
-      // Якщо не змінили текст — просто вийти з режиму редагування
       setUpdatingId(null);
       setUpdatingText('');
 
@@ -166,11 +174,9 @@ export const App: React.FC = () => {
 
       setAllTodos(current => current.map(t => (t.id === id ? updatedTodo : t)));
 
-      // Успішне оновлення — закриваємо
       setUpdatingId(null);
       setUpdatingText('');
     } catch {
-      // Не закриваємо поле редагування
       setErrors('Unable to update a todo');
     }
   };
@@ -261,6 +267,7 @@ export const App: React.FC = () => {
         />
 
         <TodoList
+          onKeyDown={onKeyDown}
           loadingTodo={loadingTodo}
           filteredTodos={filteredTodos}
           toggleCompleted={toggleCompleted}

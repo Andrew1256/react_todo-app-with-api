@@ -20,6 +20,7 @@ interface Props {
   togglingCompleted: number | null;
   setUpdatingId: (a: number | null) => void;
   errors: string;
+  onKeyDown: (a: number, e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
 export const TodoList: React.FC<Props> = ({
@@ -36,6 +37,7 @@ export const TodoList: React.FC<Props> = ({
   togglingCompleted,
   setUpdatingId,
   errors,
+  onKeyDown,
 }) => {
   const todosToShow = temp ? [...filteredTodos, temp] : filteredTodos;
 
@@ -57,6 +59,7 @@ export const TodoList: React.FC<Props> = ({
           togglingCompleted={togglingCompleted}
           setUpdatingId={setUpdatingId}
           errors={errors}
+          onKeyDown={onKeyDown}
         />
       ))}
     </section>

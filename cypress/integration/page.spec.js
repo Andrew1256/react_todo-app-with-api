@@ -2,7 +2,6 @@
 
 import mixedTodos from '../fixtures/todos.json';
 
-//#region Page Objects
 const page = {
   toggleAllButton: () => cy.byDataCy('ToggleAllButton'),
   newTodoField: () => cy.byDataCy('NewTodoField'),

@@ -12,11 +12,11 @@ interface Props {
   completedTodos: number;
 }
 
-const filters = [
-  { title: 'All', type: Selected.All, href: '#/' },
-  { title: 'Active', type: Selected.Active, href: '#/active' },
-  { title: 'Completed', type: Selected.Completed, href: '#/completed' },
-];
+const filters = Object.values(Selected).map(value => ({
+  title: value,
+  type: value,
+  href: value === Selected.All ? '#/' : `#/${value.toLowerCase()}`,
+}));
 
 export const Footer: React.FC<Props> = ({
   allTodos,

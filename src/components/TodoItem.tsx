@@ -19,6 +19,7 @@ interface Props {
   togglingCompleted: number | null;
   setUpdatingId: (a: number | null) => void;
   errors: string;
+  onKeyDown: (id: number, e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
 export const TodoItem: React.FC<Props> = ({
@@ -33,8 +34,8 @@ export const TodoItem: React.FC<Props> = ({
   temp,
   isDeleting,
   togglingCompleted,
-  setUpdatingId,
   errors,
+  onKeyDown,
 }) => {
   const todoItemClass = classNames('todo is-active', {
     completed: todo.completed,
@@ -63,16 +64,7 @@ export const TodoItem: React.FC<Props> = ({
             value={updatingText}
             onChange={e => setUpdatingText(e.target.value)}
             onBlur={e => handleSave(todo.id, e)}
-            onKeyDown={e => {
-              if (e.key === 'Escape') {
-                setUpdatingId(null); // Вийти з режиму редагування
-                setUpdatingText('');
-              }
-
-              if (e.key === 'Enter') {
-                handleSave(todo.id, e);
-              }
-            }}
+            onKeyDown={e => onKeyDown(todo.id, e)}
             autoFocus
             className="todo__title-field"
             data-cy="TodoTitleField"
@@ -107,7 +99,7 @@ export const TodoItem: React.FC<Props> = ({
             (temp?.id === todo.id ||
               isDeleting ||
               togglingCompleted === todo.id ||
-              updatingText.length > 0),
+              (updatingText.length > 0 && updatingId === todo.id)),
         })}
       >
         <div className="modal-background has-background-white-ter" />

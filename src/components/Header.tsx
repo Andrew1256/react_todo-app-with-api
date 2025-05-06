@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Todo } from '../types/Todo';
+import classNames from 'classnames';
 
 interface Props {
   updateAll: () => void;
@@ -24,14 +25,16 @@ export const Header: React.FC<Props> = ({
 }) => {
   useEffect(() => {
     inputRef.current?.focus();
-  }, []);
+  }, [inputRef]);
 
   return (
     <header className="todoapp__header">
       {(allTodos.length > 0 || temp) && (
         <button
           type="button"
-          className={`todoapp__toggle-all ${allTodos.every(todo => todo.completed) ? 'active' : ''}`}
+          className={classNames('todoapp__toggle-all', {
+            active: allTodos.every(todo => todo.completed),
+          })}
           data-cy="ToggleAllButton"
           onClick={updateAll}
         ></button>
